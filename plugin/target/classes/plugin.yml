@@ -1,0 +1,6 @@
+name: SMP
+version: '1.0'
+main: me.diamond.SMP
+api-version: '1.21'
+depend:
+  - packetevents

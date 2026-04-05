@@ -1,0 +1,32 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "smp:font/delay.png",
+      "ascent": 7,
+      "height": 8,
+      "chars": ["\uE000"]
+    },
+	{
+      "type": "bitmap",
+      "file": "smp:font/equip.png",
+      "ascent": 16,
+      "height": 16,
+      "chars": ["\uE001"]
+    },
+	{
+      "type": "bitmap",
+      "file": "smp:font/sorcerer_equip.png",
+      "ascent": 16,
+      "height": 16,
+      "chars": ["\uE002"]
+    },
+	{
+      "type": "bitmap",
+      "file": "smp:font/inferno_equip.png",
+      "ascent": 16,
+      "height": 16,
+      "chars": ["\uE003"]
+    }
+  ]
+}
