@@ -2,9 +2,7 @@ package me.diamond.abilities;
 
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class AbilityManager {
     private static final Map<UUID, Map<AbilityType, Ability>> abilities = new HashMap<>();
@@ -29,6 +27,15 @@ public class AbilityManager {
 
     public static void grantAbility(Player player, AbilityType type) {
         Ability ability = loadAbility(player, type);
-        player.getInventory().addItem(ability.getSpecialItems());
+        player.give(ability.getSpecialItems());
+    }
+
+    public static void removeAbility(Player player, AbilityType type) {
+        Ability ability = abilities.get(player.getUniqueId()).remove(type);
+        ability.clearUp();
+    }
+
+    public static Set<AbilityType> getAbilities(Player player) {
+        return abilities.get(player.getUniqueId()).keySet();
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffectType;
 
 public class PlayerHitEvent implements Listener {
     @EventHandler
@@ -67,6 +68,25 @@ public class PlayerHitEvent implements Listener {
                     entity.setFireTicks(15 * 20); //Set on fire for 15s
                     inferno.setInfernoActivated(false); //Deactivate after hit
                     player.hideBossBar(inferno.getBar());
+                }
+                if (AbilityManager.getAbility(player, AbilityType.AQUA_MAN) != null && player.isUnderWater()) {
+                    // Multiply damage to simulate crit
+                    double critDamage = event.getDamage() * 1.5;
+                    event.setDamage(critDamage);
+
+                    // Spawn crit particles at target
+                    event.getEntity().getWorld().spawnParticle(
+                            Particle.CRIT,
+                            event.getEntity().getLocation().add(0, 1, 0),
+                            10, 0.5, 0.5, 0.5, 0
+                    );
+
+                    // Play crit sound
+                    event.getEntity().getWorld().playSound(
+                            event.getEntity().getLocation(),
+                            Sound.ENTITY_PLAYER_ATTACK_CRIT,
+                            1f, 1f
+                    );
                 }
             }
         }

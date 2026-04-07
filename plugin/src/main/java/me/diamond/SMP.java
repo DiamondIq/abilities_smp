@@ -2,6 +2,10 @@ package me.diamond;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketListenerPriority;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.papermc.paper.math.Position;
+import io.papermc.paper.plugin.lifecycle.event.LifecycleEvent;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import lombok.Getter;
 import me.diamond.abilities.Ability;
 import me.diamond.abilities.AbilityType;
@@ -30,7 +34,13 @@ public final class SMP extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PotionThrowEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new ItemOffhandEvent(), this);
         PacketEvents.getAPI().getEventManager().registerListener(new PlayerMoveEvent(), PacketListenerPriority.NORMAL);
+
+        //Register Commands
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+            commands.registrar().register(AbilityCommand.createCommand());
+        });
     }
 
     @Override

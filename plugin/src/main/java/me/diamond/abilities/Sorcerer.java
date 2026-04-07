@@ -2,21 +2,17 @@ package me.diamond.abilities;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemLore;
-import io.papermc.paper.datacomponent.item.PotionContents;
-import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import lombok.Getter;
 import lombok.Setter;
 import me.diamond.utils.Utils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionType;
 
 import java.util.List;
 
@@ -49,7 +45,7 @@ public class Sorcerer extends Ability {
 
         ItemStack item2 = new ItemStack(Material.SPLASH_POTION);
         item2.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", "sorcerer_pot_ability"));
-        item2.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("POTION OF MYSTERY", 0xff3434, 0x42ffff));
+        item2.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("POTION OF MYSTERY", 0x52eb34, 0x52eb34));
         item2.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         item2.setData(DataComponentTypes.LORE, ItemLore.lore(List.of(
                 Component.text("Mystery")

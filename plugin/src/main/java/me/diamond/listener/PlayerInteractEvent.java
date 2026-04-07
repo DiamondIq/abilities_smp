@@ -1,6 +1,5 @@
 package me.diamond.listener;
 
-import io.papermc.paper.datacomponent.DataComponentTypes;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
 import me.diamond.abilities.Hacker;

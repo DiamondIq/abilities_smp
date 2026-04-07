@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="maven-antrun-" default="main">
   <target name="main">
-    <copy file="C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\target/SMP-1.0.jar" todir="C:\Users\karol\OneDrive\Pulpit\Pulpit\Minecraft\Test Server\plugins" />
+    <copy file="C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\target/SMP-1.0.jar" todir="C:\Users\karol\OneDrive\Pulpit\Pulpit\Minecraft\Test Server\plugins" />
   </target>
 </project>

@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.key.Key;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -33,4 +35,11 @@ public abstract class Ability {
 
         return item;
     }
+
+    public void clearUp() {
+        player.getInventory().removeItem(getSpecialItems());
+        additionalClearUp();
+    }
+
+    protected void additionalClearUp() {}
 }

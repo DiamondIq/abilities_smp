@@ -13,7 +13,6 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
@@ -33,6 +32,10 @@ public class Inferno extends Ability {
         new BukkitRunnable() {
             @Override
             public void run() {
+                if (!player.isOnline() || AbilityManager.getAbility(player, AbilityType.INFERNO) == null) {
+                    cancel();
+                    return;
+                }
                 player.addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(20 * 2, 0));
             }
         }.runTaskTimer(SMP.getPlugin(), 0, 20);
@@ -51,8 +54,20 @@ public class Inferno extends Ability {
         item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("INFERNO", 0xFF0000, 0xFFFF00));
         item.setData(DataComponentTypes.LORE, ItemLore.lore().addLines(List.of(
                         Component.text("[").color(NamedTextColor.GOLD).append(Component.text("Right click for 5s").color(NamedTextColor.GRAY).append(Component.text("]").color(NamedTextColor.GOLD))).append(Component.text(" If you hit a player in the next 1min, an Inferno will summon around them.")).color(NamedTextColor.GRAY),
-                Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
-                        .append(Component.text(" This ability has a 2min cooldown.").font(Key.key("minecraft", "default")).color(NamedTextColor.GRAY))))
+                        Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
+                                .append(Component.text(" This ability has a 2min cooldown.").font(Key.key("minecraft", "default")).color(NamedTextColor.GRAY)),
+                        Component.empty(),
+                        Component.text("[")
+                                .color(NamedTextColor.GOLD)
+                                .append(Component.translatable("Hold %s",
+                                        Component.keybind("key.swapOffhand")
+                                                .color(NamedTextColor.GRAY)
+                                                .append(Component.text("]").color(NamedTextColor.GOLD))
+                                ))
+                                .append(Component.text(" Fire breath").color(NamedTextColor.GRAY)),
+                        Component.text("Summon a beam of fire that sets on fire and damages anything on its way").color(NamedTextColor.GRAY),
+                        Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
+                                .append(Component.text(" This ability has a 2min cooldown.").font(Key.key("minecraft", "default")).color(NamedTextColor.GRAY))))
                 .build());
         item.setData(DataComponentTypes.CONSUMABLE, Consumable.consumable()
                 .consumeSeconds(5)

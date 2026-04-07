@@ -47,7 +47,7 @@ public class PotionThrowEvent implements Listener {
         for (LivingEntity entity : event.getAffectedEntities()) {
 
             int duration = (int) (BASE_DURATION * event.getIntensity(entity));
-            if (type == PotionEffectType.INSTANT_DAMAGE) duration = 20;
+            if (type == PotionEffectType.INSTANT_DAMAGE) duration = 1;
 
             int amplifier = switch (type.getKey().getKey()) {
                 case "mining_fatigue" -> ThreadLocalRandom.current().nextInt(4);

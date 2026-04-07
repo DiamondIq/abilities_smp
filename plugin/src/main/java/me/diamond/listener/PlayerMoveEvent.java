@@ -1,15 +1,21 @@
 package me.diamond.listener;
 
+import com.destroystokyo.paper.ClientOption;
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
+import io.papermc.paper.math.Position;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
 import me.diamond.abilities.Hacker;
+import org.bukkit.Bukkit;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
+import org.eclipse.aether.metadata.Metadata;
 
 public class PlayerMoveEvent implements PacketListener {
 
@@ -17,34 +23,20 @@ public class PlayerMoveEvent implements PacketListener {
     public void onPacketSend(PacketSendEvent event) {
         Player viewer = event.getPlayer();
 
-        int entityId = -1;
-
-        // Get entityId depending on packet type
-        if (event.getPacketType() == PacketType.Play.Server.ENTITY_RELATIVE_MOVE) {
-            entityId = new WrapperPlayServerEntityRelativeMove(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_RELATIVE_MOVE_AND_ROTATION) {
-            entityId = new WrapperPlayServerEntityRelativeMoveAndRotation(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_ROTATION) {
-            entityId = new WrapperPlayServerEntityRotation(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_TELEPORT) {
-            entityId = new WrapperPlayServerEntityTeleport(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_POSITION_SYNC) {
-            entityId = new WrapperPlayServerEntityPositionSync(event).getId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_HEAD_LOOK) {
-            entityId = new WrapperPlayServerEntityHeadLook(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_VELOCITY) {
-            entityId = new WrapperPlayServerEntityVelocity(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_ANIMATION) {
-            entityId = new WrapperPlayServerEntityAnimation(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_EQUIPMENT) {
-            entityId = new WrapperPlayServerEntityEquipment(event).getEntityId();
-        } else if (event.getPacketType() == PacketType.Play.Server.ENTITY_METADATA) {
-            entityId = new WrapperPlayServerEntityMetadata(event).getEntityId();
-        } else {
-            return;
-        }
-
-
+        int entityId = switch (event.getPacketType()) {
+            case PacketType.Play.Server.ENTITY_RELATIVE_MOVE -> new WrapperPlayServerEntityRelativeMove(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_RELATIVE_MOVE_AND_ROTATION -> new WrapperPlayServerEntityRelativeMoveAndRotation(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_ROTATION -> new WrapperPlayServerEntityRotation(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_TELEPORT -> new WrapperPlayServerEntityTeleport(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_POSITION_SYNC -> new WrapperPlayServerEntityPositionSync(event).getId();
+            case PacketType.Play.Server.ENTITY_HEAD_LOOK -> new WrapperPlayServerEntityHeadLook(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_VELOCITY -> new WrapperPlayServerEntityVelocity(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_ANIMATION -> new WrapperPlayServerEntityAnimation(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_METADATA -> new WrapperPlayServerEntityMetadata(event).getEntityId();
+            case PacketType.Play.Server.ENTITY_EQUIPMENT -> new WrapperPlayServerEntityEquipment(event).getEntityId();
+            default -> -1;
+        };
+        if (entityId == -1) return;
         Entity entity = SpigotConversionUtil.getEntityById(viewer.getWorld(), entityId);
         if (!(entity instanceof Player target)) return;
 

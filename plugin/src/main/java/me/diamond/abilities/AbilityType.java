@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum AbilityType {
     INFERNO(Inferno.class),
     SORCERER(Sorcerer.class),
-    HACKER(Hacker.class);
+    HACKER(Hacker.class),
+    AQUA_MAN(AquaMan.class);
 
     private final Class<? extends Ability> clazz;
 }

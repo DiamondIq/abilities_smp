@@ -14,6 +14,7 @@ public class PlayerJoinEvent implements Listener {
         AbilityManager.grantAbility(event.getPlayer(), AbilityType.INFERNO);
         AbilityManager.grantAbility(event.getPlayer(), AbilityType.SORCERER);
         AbilityManager.grantAbility(event.getPlayer(), AbilityType.HACKER);
+        AbilityManager.grantAbility(event.getPlayer(), AbilityType.AQUA_MAN);
 
         ActionBarManager.startActionBar(event.getPlayer(), Component.text("\uE002").font(Key.key("smp", "custom"))
                 .append(Component.text("      ").font(Key.key("minecraft", "default")))
