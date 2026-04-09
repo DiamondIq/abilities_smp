@@ -3,6 +3,7 @@ package me.diamond.listener;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
+import me.diamond.SMP;
 import me.diamond.abilities.Ability;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
@@ -13,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -46,10 +48,23 @@ public class PlayerDeathEvent implements Listener {
         }
 
         //Drop abilities
-        for (AbilityType ability : AbilityManager.getAbilities(player)) {
-            event.getDrops().add(Ability.getEquipItem(ability));
-            AbilityManager.removeAbility(player, ability);
+        if (SMP.getPlugin().getConfig().getBoolean("lose-abilities-on-death")) {
+            for (AbilityType ability : AbilityManager.getAbilities(player)) {
+                event.getDrops().add(Ability.getEquipItem(ability));
+                AbilityManager.removeAbility(player, ability);
+            }
+            player.sendMessage(Component.text("You died and dropped all of your abilities").color(NamedTextColor.RED));
         }
-        player.sendMessage(Component.text("You died and dropped all of your abilities").color(NamedTextColor.RED));
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+
+        //Give back special items
+        for (AbilityType type : AbilityManager.getAbilities(player)) {
+            Ability ability = AbilityManager.getAbility(player, type);
+            player.give(ability.getSpecialItems());
+        }
     }
 }

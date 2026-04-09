@@ -15,13 +15,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SMP extends JavaPlugin {
 
-    public static final int MAX_ABILITIES = 3;
+    public static int MAX_ABILITIES;
     @Getter
     private static JavaPlugin plugin;
 
     @Override
     public void onEnable() {
         plugin = this;
+
+        //Config
+        saveResource("config.yml", false);
+        saveDefaultConfig();
+        MAX_ABILITIES = getConfig().getInt("max-abilities");
 
         //Register recipes
         registerRecipes();
