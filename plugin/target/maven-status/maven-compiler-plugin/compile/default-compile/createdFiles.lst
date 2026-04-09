@@ -7,13 +7,13 @@ me\diamond\listener\PlayerDeathEvent.class
 me\diamond\utils\ActionBarManager.class
 me\diamond\utils\ActionBarManager$1.class
 me\diamond\utils\Utils$1.class
+me\diamond\abilities\Ability$1.class
 me\diamond\SMP.class
 me\diamond\listener\PotionThrowEvent.class
 me\diamond\listener\PlayerJoinEvent.class
 me\diamond\AbilityCommand.class
 me\diamond\abilities\Sorcerer.class
 me\diamond\utils\Utils.class
-me\diamond\abilities\AquaMan$1.class
 me\diamond\listener\ItemDropEvent$1.class
 me\diamond\listener\PlayerMoveEvent.class
 me\diamond\utils\CooldownManager.class
@@ -24,4 +24,3 @@ me\diamond\abilities\AbilityType.class
 me\diamond\abilities\AquaMan.class
 me\diamond\listener\PlayerHitEvent.class
 me\diamond\abilities\Ability.class
-me\diamond\abilities\Inferno$1.class

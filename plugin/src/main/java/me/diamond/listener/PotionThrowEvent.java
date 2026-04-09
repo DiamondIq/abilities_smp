@@ -2,8 +2,9 @@ package me.diamond.listener;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import me.diamond.SMP;
+import me.diamond.utils.CooldownManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.GameMode;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
@@ -16,7 +17,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
-import java.util.SequencedMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PotionThrowEvent implements Listener {
@@ -40,36 +40,38 @@ public class PotionThrowEvent implements Listener {
 
         if (potion.getData(DataComponentTypes.ITEM_MODEL) == null) return;
         if (!potion.getData(DataComponentTypes.ITEM_MODEL).value().equalsIgnoreCase("sorcerer_pot_ability")) return;
+        if (CooldownManager.isOnCooldown((Player) event.getEntity(), "sorcerer_pot")) {
 
-        // Pick random effect type
-        PotionEffectType type = EFFECT_TYPES.get(ThreadLocalRandom.current().nextInt(EFFECT_TYPES.size()));
+            // Pick random effect type
+            PotionEffectType type = EFFECT_TYPES.get(ThreadLocalRandom.current().nextInt(EFFECT_TYPES.size()));
 
-        for (LivingEntity entity : event.getAffectedEntities()) {
+            for (LivingEntity entity : event.getAffectedEntities()) {
 
-            int duration = (int) (BASE_DURATION * event.getIntensity(entity));
-            if (type == PotionEffectType.INSTANT_DAMAGE) duration = 1;
+                int duration = (int) (BASE_DURATION * event.getIntensity(entity));
+                if (duration < 10 * 20) return; //Min duration
+                if (type == PotionEffectType.INSTANT_DAMAGE) duration = 1;
 
-            int amplifier = switch (type.getKey().getKey()) {
-                case "mining_fatigue" -> ThreadLocalRandom.current().nextInt(4);
-                case "weakness" -> ThreadLocalRandom.current().nextInt(2);
-                case "slowness" -> ThreadLocalRandom.current().nextInt(3);
-                default -> 0;
-            };
+                int amplifier = switch (type.getKey().getKey()) {
+                    case "mining_fatigue" -> ThreadLocalRandom.current().nextInt(4);
+                    case "weakness" -> ThreadLocalRandom.current().nextInt(2);
+                    case "slowness" -> ThreadLocalRandom.current().nextInt(3);
+                    default -> 0;
+                };
 
-            PotionEffect effect = new PotionEffect(
-                    type,
-                    duration,
-                    amplifier,
-                    false,
-                    true,
-                    true
-            );
+                PotionEffect effect = new PotionEffect(
+                        type,
+                        duration,
+                        amplifier,
+                        false,
+                        true,
+                        true
+                );
 
-            entity.addPotionEffect(effect);
+                entity.addPotionEffect(effect);
+            }
+            event.setCancelled(true);
+            CooldownManager.setCooldown(((Player) event.getEntity()), "sorcerer_pot", 60 * 1000);
         }
-
-
-        event.setCancelled(true);
     }
 
     @EventHandler
@@ -83,8 +85,10 @@ public class PotionThrowEvent implements Listener {
         if (!item.getData(DataComponentTypes.ITEM_MODEL).value().equalsIgnoreCase("sorcerer_pot_ability")) return;
 
         // Give it back next tick
-        Bukkit.getScheduler().runTask(SMP.getPlugin(), () -> {
-            player.getInventory().addItem(item);
-        });
+        if (player.getGameMode() != GameMode.CREATIVE) {
+            Bukkit.getScheduler().runTask(SMP.getPlugin(), () -> {
+                player.getInventory().addItem(item);
+            });
+        }
     }
 }

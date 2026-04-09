@@ -3,22 +3,21 @@ package me.diamond.abilities;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
 import io.papermc.paper.datacomponent.item.ItemLore;
-import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
 import lombok.Getter;
 import lombok.Setter;
-import me.diamond.SMP;
 import me.diamond.utils.Utils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -28,17 +27,6 @@ public class Inferno extends Ability {
 
     public Inferno(Player player) {
         super(AbilityType.INFERNO, player);
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!player.isOnline() || AbilityManager.getAbility(player, AbilityType.INFERNO) == null) {
-                    cancel();
-                    return;
-                }
-                player.addPotionEffect(PotionEffectType.FIRE_RESISTANCE.createEffect(20 * 2, 0));
-            }
-        }.runTaskTimer(SMP.getPlugin(), 0, 20);
     }
 
     public void activate() {
@@ -51,7 +39,7 @@ public class Inferno extends Ability {
         ItemStack item = new ItemStack(Material.BLAZE_POWDER);
         item.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", "inferno_ability"));
         item.setData(DataComponentTypes.ITEM_NAME, Component.text("inferno_ability"));
-        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("INFERNO", 0xFF0000, 0xFFFF00));
+        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("INFERNO", 0xFF0000, 0xFFFF00).decoration(TextDecoration.BOLD, true));
         item.setData(DataComponentTypes.LORE, ItemLore.lore().addLines(List.of(
                         Component.text("[").color(NamedTextColor.GOLD).append(Component.text("Right click for 5s").color(NamedTextColor.GRAY).append(Component.text("]").color(NamedTextColor.GOLD))).append(Component.text(" If you hit a player in the next 1min, an Inferno will summon around them.")).color(NamedTextColor.GRAY),
                         Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
@@ -59,11 +47,10 @@ public class Inferno extends Ability {
                         Component.empty(),
                         Component.text("[")
                                 .color(NamedTextColor.GOLD)
-                                .append(Component.translatable("Hold %s",
-                                        Component.keybind("key.swapOffhand")
-                                                .color(NamedTextColor.GRAY)
-                                                .append(Component.text("]").color(NamedTextColor.GOLD))
-                                ))
+                                .append(Component.text("Hold right click")
+                                        .color(NamedTextColor.GRAY)
+                                        .append(Component.text("]").color(NamedTextColor.GOLD))
+                                )
                                 .append(Component.text(" Fire breath").color(NamedTextColor.GRAY)),
                         Component.text("Summon a beam of fire that sets on fire and damages anything on its way").color(NamedTextColor.GRAY),
                         Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
@@ -71,11 +58,15 @@ public class Inferno extends Ability {
                 .build());
         item.setData(DataComponentTypes.CONSUMABLE, Consumable.consumable()
                 .consumeSeconds(5)
-                .animation(ItemUseAnimation.CROSSBOW)
                 .hasConsumeParticles(false)
                 .sound(Key.key(""))
                 .build());
 
         return new ItemStack[]{item};
+    }
+
+    @Override
+    protected Set<PotionEffectType> getPermanentPotionEffects() {
+        return Set.of(PotionEffectType.FIRE_RESISTANCE);
     }
 }

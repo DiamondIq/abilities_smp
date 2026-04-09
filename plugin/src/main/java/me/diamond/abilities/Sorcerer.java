@@ -29,7 +29,7 @@ public class Sorcerer extends Ability {
     public ItemStack[] getSpecialItems() {
         ItemStack item = new ItemStack(Material.STICK);
         item.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", "sorcerer_ability"));
-        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("SORCERER", 0x2e2e2e, 0xa1a1a1));
+        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("SORCERER", 0x2e2e2e, 0xa1a1a1).decoration(TextDecoration.BOLD, true));
         item.setData(DataComponentTypes.LORE, ItemLore.lore().addLines(List.of(
                 Component.text("[")
                         .color(NamedTextColor.GOLD)
@@ -38,14 +38,15 @@ public class Sorcerer extends Ability {
                                         .color(NamedTextColor.GRAY)
                                         .append(Component.text("]").color(NamedTextColor.GOLD))
                         ))
-                        .append(Component.text(" Vanish into shadows for 5s. This grants invisibility, invulnerability and speed 4.").color(NamedTextColor.GRAY)),
+                        .append(Component.text(" Vanish into shadows for 5s.").color(NamedTextColor.GRAY)),
+                Component.text("This grants invisibility, invulnerability and speed 4.").color(NamedTextColor.GRAY),
                 Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
                         .append(Component.text(" This ability has a 2min cooldown.").font(Key.key("minecraft", "default")).color(NamedTextColor.GRAY))
         )).build());
 
         ItemStack item2 = new ItemStack(Material.SPLASH_POTION);
         item2.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", "sorcerer_pot_ability"));
-        item2.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("POTION OF MYSTERY", 0x52eb34, 0x52eb34));
+        item2.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("POTION OF MYSTERY", 0x52eb34, 0x52eb34).decoration(TextDecoration.BOLD, true));
         item2.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
         item2.setData(DataComponentTypes.LORE, ItemLore.lore(List.of(
                 Component.text("Mystery")

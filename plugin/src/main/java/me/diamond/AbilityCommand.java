@@ -8,6 +8,8 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 
 public class AbilityCommand {
@@ -39,18 +41,18 @@ public class AbilityCommand {
         try {
             type = AbilityType.valueOf(input);
         } catch (IllegalArgumentException e) {
-            player.sendMessage("§cInvalid ability!");
+            player.sendMessage(Component.text("Invalid ability!").color(NamedTextColor.RED));
             return 0;
         }
 
         if (AbilityManager.getAbility(player, type) == null) {
-            player.sendMessage("§cYou don't have that ability!");
+            player.sendMessage(Component.text("You don't have that ability!").color(NamedTextColor.RED));
             return 0;
         }
 
         AbilityManager.removeAbility(player, type);
         //Todo - give item
-        player.sendMessage("§aAbility withdrawn!");
+        player.sendMessage(Component.text("Ability withdrawn!").color(NamedTextColor.GREEN));
 
         return Command.SINGLE_SUCCESS;
     }

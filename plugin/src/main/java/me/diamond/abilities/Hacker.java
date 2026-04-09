@@ -11,6 +11,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public class Hacker extends Ability {
     public ItemStack[] getSpecialItems() {
         ItemStack item = new ItemStack(Material.STICK);
         item.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", "hacker_ability"));
-        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("HACKER", 0xcc00ff, 0x00ff38));
+        item.setData(DataComponentTypes.CUSTOM_NAME, Utils.gradientText("HACKER", 0xcc00ff, 0x00ff38).decoration(TextDecoration.BOLD, true));
         item.setData(DataComponentTypes.LORE, ItemLore.lore().addLines(List.of(
                 Component.text("[")
                         .color(NamedTextColor.GOLD)
@@ -41,7 +42,8 @@ public class Hacker extends Ability {
                                         .color(NamedTextColor.GRAY)
                                         .append(Component.text("]").color(NamedTextColor.GOLD))
                         ))
-                        .append(Component.text(" Blink for 20s. This makes u look frozen in place but in reality you can move wherever u want. While doing this you are unable to interact with the world.").color(NamedTextColor.GRAY)),
+                        .append(Component.text(" Blink for 20s. This makes u look frozen in place but in reality you can move wherever u want.").color(NamedTextColor.GRAY)),
+                Component.text("While doing this you are unable to interact with the world.").color(NamedTextColor.GRAY),
                 Component.text("\uE000").font(Key.key("smp", "custom")).color(NamedTextColor.WHITE)
                         .append(Component.text(" This ability has a 3min cooldown.").font(Key.key("minecraft", "default")).color(NamedTextColor.GRAY))
         )).build());

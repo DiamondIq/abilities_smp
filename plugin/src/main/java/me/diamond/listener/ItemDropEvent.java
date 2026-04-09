@@ -11,7 +11,7 @@ import me.diamond.utils.Utils;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -81,7 +81,7 @@ public class ItemDropEvent implements Listener {
 
         if (model.namespace().equalsIgnoreCase("smp") && model.value().endsWith("_ability")) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You can't drop this!");
+            player.sendMessage(Component.text("You can't drop this!").color(NamedTextColor.RED));
         }
     }
 }

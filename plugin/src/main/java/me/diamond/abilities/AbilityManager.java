@@ -1,11 +1,16 @@
 package me.diamond.abilities;
 
+import me.diamond.SMP;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
 
 public class AbilityManager {
     private static final Map<UUID, Map<AbilityType, Ability>> abilities = new HashMap<>();
+    private static final NamespacedKey KEY = new NamespacedKey(SMP.getPlugin(), "abilities");
 
     // Get ability
     public static Ability getAbility(Player player, AbilityType type) {
@@ -26,6 +31,14 @@ public class AbilityManager {
     }
 
     public static void grantAbility(Player player, AbilityType type) {
+        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
+        List<String> abilities = persistentDataContainer.get(KEY, PersistentDataType.LIST.strings());
+        if (abilities != null) {
+            abilities.add(type.name());
+        } else {
+            persistentDataContainer.set(KEY, PersistentDataType.LIST.strings(), List.of(type.name()));
+        }
+
         Ability ability = loadAbility(player, type);
         player.give(ability.getSpecialItems());
     }
@@ -33,6 +46,17 @@ public class AbilityManager {
     public static void removeAbility(Player player, AbilityType type) {
         Ability ability = abilities.get(player.getUniqueId()).remove(type);
         ability.clearUp();
+    }
+
+    public static void loadAbilities(Player player) {
+        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
+        List<String> abilities = persistentDataContainer.get(KEY, PersistentDataType.LIST.strings());
+        if (abilities != null) {
+            for (String ability : abilities) {
+                AbilityType type = AbilityType.valueOf(ability);
+                loadAbility(player, type);
+            }
+        }
     }
 
     public static Set<AbilityType> getAbilities(Player player) {

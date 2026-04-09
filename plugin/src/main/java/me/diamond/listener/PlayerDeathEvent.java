@@ -3,9 +3,14 @@ package me.diamond.listener;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
-import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
+import me.diamond.abilities.Ability;
+import me.diamond.abilities.AbilityManager;
+import me.diamond.abilities.AbilityType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -18,23 +23,33 @@ import java.util.List;
 public class PlayerDeathEvent implements Listener {
     @EventHandler
     public void onDeath(org.bukkit.event.entity.PlayerDeathEvent event) {
-        ItemStack head = ItemStack.of(Material.PLAYER_HEAD);
-        head.setData(DataComponentTypes.CONSUMABLE, Consumable.consumable()
-                        .consumeSeconds(1.6f)
-                        .animation(ItemUseAnimation.EAT)
-                        .hasConsumeParticles(true)
-                        .addEffect(ConsumeEffect.applyStatusEffects(List.of(new PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 0)), 1f)) // effect: 5s regeneration I
-                        .build());
+        Player player = event.getPlayer();
 
-        SkullMeta meta = (SkullMeta) head.getItemMeta();
+        //Only drop if player dies to a different player
+        if (event.getDamageSource().getCausingEntity() instanceof Player) {
+            ItemStack head = ItemStack.of(Material.PLAYER_HEAD);
+            //Make edible
+            head.setData(DataComponentTypes.CONSUMABLE, Consumable.consumable()
+                    .consumeSeconds(1.6f)
+                    .addEffect(ConsumeEffect.applyStatusEffects(List.of(new PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 1)), 1f)) // effect: 5s regeneration I
+                    .build());
 
-        if (meta != null) {
-            meta.setOwningPlayer(event.getPlayer());
-            meta.setLore(List.of(ChatColor.GRAY + "Eat to gain regeneration"));
-            head.setItemMeta(meta);
+            SkullMeta meta = (SkullMeta) head.getItemMeta();
+            if (meta != null) {
+                meta.setOwningPlayer(player);
+                meta.setLore(List.of(ChatColor.GRAY + "Eat to gain regeneration"));
+                head.setItemMeta(meta);
+            }
+
+            // Add the head to dropped loot
+            event.getDrops().add(head);
         }
 
-        // Add the head to dropped loot
-        event.getDrops().add(head);
+        //Drop abilities
+        for (AbilityType ability : AbilityManager.getAbilities(player)) {
+            event.getDrops().add(Ability.getEquipItem(ability));
+            AbilityManager.removeAbility(player, ability);
+        }
+        player.sendMessage(Component.text("You died and dropped all of your abilities").color(NamedTextColor.RED));
     }
 }

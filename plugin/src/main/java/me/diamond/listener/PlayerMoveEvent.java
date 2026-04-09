@@ -1,21 +1,15 @@
 package me.diamond.listener;
 
-import com.destroystokyo.paper.ClientOption;
 import com.github.retrooper.packetevents.event.PacketListener;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.*;
 import io.github.retrooper.packetevents.util.SpigotConversionUtil;
-import io.papermc.paper.math.Position;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
 import me.diamond.abilities.Hacker;
-import org.bukkit.Bukkit;
-import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.metadata.MetadataValue;
-import org.eclipse.aether.metadata.Metadata;
 
 public class PlayerMoveEvent implements PacketListener {
 
