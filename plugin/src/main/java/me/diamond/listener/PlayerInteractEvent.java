@@ -7,6 +7,7 @@ import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
 import me.diamond.abilities.Hacker;
 import me.diamond.utils.CooldownManager;
+import me.diamond.utils.Utils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -51,6 +52,7 @@ public class PlayerInteractEvent implements Listener {
                         AbilityType ability = AbilityType.valueOf(model.value().split("_")[0].toUpperCase());
                         if (AbilityManager.getAbilities(player).size() < SMP.MAX_ABILITIES) {
                             AbilityManager.grantAbility(player, ability);
+                            Utils.playItemPopup(player, item);
                             player.getInventory().remove(item);
                             player.sendMessage(Component.text(String.format("Successfully equipped the %s ability!", ability.name().toLowerCase())).color(NamedTextColor.GREEN));
                             player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
