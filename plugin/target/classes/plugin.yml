@@ -4,3 +4,8 @@ main: me.diamond.SMP
 api-version: '1.21'
 depend:
   - packetevents
+permissions:
+  abilities.give:
+    description: Give abilities to other players
+  abilities.remove:
+    description: Remove other players' abilities

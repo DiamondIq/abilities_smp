@@ -33,7 +33,7 @@ public class PlayerDeathEvent implements Listener {
             //Make edible
             head.setData(DataComponentTypes.CONSUMABLE, Consumable.consumable()
                     .consumeSeconds(1.6f)
-                    .addEffect(ConsumeEffect.applyStatusEffects(List.of(new PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 1)), 1f)) // effect: 5s regeneration I
+                    .addEffect(ConsumeEffect.applyStatusEffects(List.of(new PotionEffect(PotionEffectType.REGENERATION, 3 * 20, 1, false, true)), 1f)) // effect: 3s regeneration II
                     .build());
 
             SkullMeta meta = (SkullMeta) head.getItemMeta();
@@ -46,6 +46,13 @@ public class PlayerDeathEvent implements Listener {
             // Add the head to dropped loot
             event.getDrops().add(head);
         }
+
+        //Remove ability items
+        event.getDrops().removeIf(item -> {
+            if (!item.hasData(DataComponentTypes.ITEM_MODEL)) return false;
+            net.kyori.adventure.key.Key model = item.getData(DataComponentTypes.ITEM_MODEL);
+            return model != null && model.value().endsWith("_ability");
+        });
 
         //Drop abilities
         if (SMP.getPlugin().getConfig().getBoolean("lose-abilities-on-death")) {

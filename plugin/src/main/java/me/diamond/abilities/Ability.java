@@ -37,14 +37,14 @@ public abstract class Ability {
 
     public static ItemStack getEquipItem(AbilityType type) {
         ItemStack item = ItemStack.of(Material.PAPER);
-        item.setData(DataComponentTypes.CUSTOM_NAME, Component.text(type.name() + " ABILITY").color(NamedTextColor.DARK_PURPLE).decoration(TextDecoration.BOLD, true));
+        item.setData(DataComponentTypes.CUSTOM_NAME, Component.text(type.name() + " ABILITY").color(NamedTextColor.GOLD).decoration(TextDecoration.BOLD, true));
         item.setData(DataComponentTypes.LORE, ItemLore.lore(List.of(
                 Component.text(type.getDescription()).color(NamedTextColor.GRAY),
                 Component.text("Right click to equip").color(NamedTextColor.GRAY),
-                Component.translatable("You can have a maximum of %s abilities equipped at a time", String.valueOf(SMP.MAX_ABILITIES)).color(NamedTextColor.GRAY)
+                Component.text(String.format("You can have a maximum of %h abilities equipped at a time", SMP.MAX_ABILITIES)).color(NamedTextColor.GRAY)
         )));
         item.setData(DataComponentTypes.MAX_STACK_SIZE, 1);
-        item.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", type.name().toLowerCase()));
+        item.setData(DataComponentTypes.ITEM_MODEL, Key.key("smp", type.name().toLowerCase() + "_equip"));
 
         return item;
     }

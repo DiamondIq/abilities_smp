@@ -24,7 +24,6 @@ public final class SMP extends JavaPlugin {
         plugin = this;
 
         //Config
-        saveResource("config.yml", false);
         saveDefaultConfig();
         MAX_ABILITIES = getConfig().getInt("max-abilities");
 
@@ -45,6 +44,8 @@ public final class SMP extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PotionThrowEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryClickEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerShiftEvent(), this);
         PacketEvents.getAPI().getEventManager().registerListener(new PlayerMoveEvent(), PacketListenerPriority.NORMAL);
     }
 
@@ -66,7 +67,7 @@ public final class SMP extends JavaPlugin {
 
         //Aqua Man
         ShapedRecipe aquaman = new ShapedRecipe(new NamespacedKey(this, "aquaman"), Ability.getEquipItem(AbilityType.AQUAMAN));
-        aquaman.shape(" P ", "NHN", " P ");
+        aquaman.shape("NPN", "PHP", "NPN");
         aquaman.setIngredient('P', Material.PLAYER_HEAD);
         aquaman.setIngredient('N', Material.NAUTILUS_SHELL);
         aquaman.setIngredient('H', Material.HEART_OF_THE_SEA);

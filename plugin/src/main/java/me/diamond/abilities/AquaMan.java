@@ -40,7 +40,7 @@ public class AquaMan extends Ability {
 
     @Override
     protected Set<PotionEffectType> getPermanentPotionEffects() {
-        return Set.of(PotionEffectType.DOLPHINS_GRACE, PotionEffectType.WATER_BREATHING);
+        return Set.of(PotionEffectType.WATER_BREATHING);
     }
 }
 

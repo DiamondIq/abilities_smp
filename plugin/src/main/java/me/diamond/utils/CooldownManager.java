@@ -3,7 +3,6 @@ package me.diamond.utils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class CooldownManager {
 
     /** Set a cooldown for a player and key (ability/item) */
     public static void setCooldown(Player player, String key, long durationMillis) {
-        cooldowns.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>())
+        cooldowns.computeIfAbsent(player.getUniqueId(), _ -> new HashMap<>())
                 .put(key, System.currentTimeMillis() + durationMillis);
     }
 
@@ -58,10 +57,5 @@ public class CooldownManager {
         if (cooldowns.containsKey(player.getUniqueId())) {
             cooldowns.get(player.getUniqueId()).remove(key);
         }
-    }
-
-    /** Optional: clear all cooldowns for a player */
-    public static void clearAll(Player player) {
-        cooldowns.remove(player.getUniqueId());
     }
 }

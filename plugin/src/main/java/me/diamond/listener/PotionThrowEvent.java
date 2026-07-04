@@ -35,60 +35,60 @@ public class PotionThrowEvent implements Listener {
     );
 
     @EventHandler
-    public void onPotionThrow(PotionSplashEvent event) {
+    public void onPotionLand(PotionSplashEvent event) {
         ItemStack potion = event.getPotion().getItem();
 
         if (potion.getData(DataComponentTypes.ITEM_MODEL) == null) return;
         if (!potion.getData(DataComponentTypes.ITEM_MODEL).value().equalsIgnoreCase("sorcerer_pot_ability")) return;
-        if (CooldownManager.isOnCooldown((Player) event.getEntity(), "sorcerer_pot")) {
 
-            // Pick random effect type
-            PotionEffectType type = EFFECT_TYPES.get(ThreadLocalRandom.current().nextInt(EFFECT_TYPES.size()));
+        // Pick random effect type
+        PotionEffectType type = EFFECT_TYPES.get(ThreadLocalRandom.current().nextInt(EFFECT_TYPES.size()));
 
-            for (LivingEntity entity : event.getAffectedEntities()) {
+        for (LivingEntity entity : event.getAffectedEntities()) {
 
-                int duration = (int) (BASE_DURATION * event.getIntensity(entity));
-                if (duration < 10 * 20) return; //Min duration
-                if (type == PotionEffectType.INSTANT_DAMAGE) duration = 1;
+            int duration = (int) (BASE_DURATION * event.getIntensity(entity));
+            if (duration < 10 * 20) return; //Min duration
+            if (type == PotionEffectType.INSTANT_DAMAGE) duration = 1;
 
-                int amplifier = switch (type.getKey().getKey()) {
-                    case "mining_fatigue" -> ThreadLocalRandom.current().nextInt(4);
-                    case "weakness" -> ThreadLocalRandom.current().nextInt(2);
-                    case "slowness" -> ThreadLocalRandom.current().nextInt(3);
-                    default -> 0;
-                };
+            int amplifier = switch (type.getKey().getKey()) {
+                case "mining_fatigue" -> ThreadLocalRandom.current().nextInt(4);
+                case "weakness" -> ThreadLocalRandom.current().nextInt(2);
+                case "slowness" -> ThreadLocalRandom.current().nextInt(3);
+                default -> 0;
+            };
 
-                PotionEffect effect = new PotionEffect(
-                        type,
-                        duration,
-                        amplifier,
-                        false,
-                        true,
-                        true
-                );
+            PotionEffect effect = new PotionEffect(
+                    type,
+                    duration,
+                    amplifier,
+                    false,
+                    true,
+                    true
+            );
 
-                entity.addPotionEffect(effect);
-            }
-            event.setCancelled(true);
-            CooldownManager.setCooldown(((Player) event.getEntity()), "sorcerer_pot", 60 * 1000);
+            entity.addPotionEffect(effect);
         }
+        event.setCancelled(true);
+        CooldownManager.setCooldown(((Player) event.getEntity()), "sorcerer_pot", 60 * 1000);
     }
 
     @EventHandler
     public void onPotionThrow(ProjectileLaunchEvent event) {
         if (!(event.getEntity() instanceof ThrownPotion potion)) return;
         if (!(potion.getShooter() instanceof Player player)) return;
+        if (!CooldownManager.isOnCooldown(player, "sorcerer_pot")) {
+            ItemStack item = potion.getItem();
 
-        ItemStack item = potion.getItem();
+            if (item.getData(DataComponentTypes.ITEM_MODEL) == null) return;
+            if (!item.getData(DataComponentTypes.ITEM_MODEL).value().equalsIgnoreCase("sorcerer_pot_ability")) return;
 
-        if (item.getData(DataComponentTypes.ITEM_MODEL) == null) return;
-        if (!item.getData(DataComponentTypes.ITEM_MODEL).value().equalsIgnoreCase("sorcerer_pot_ability")) return;
-
-        // Give it back next tick
-        if (player.getGameMode() != GameMode.CREATIVE) {
-            Bukkit.getScheduler().runTask(SMP.getPlugin(), () -> {
-                player.getInventory().addItem(item);
-            });
+            // Give it back next tick
+            if (player.getGameMode() != GameMode.CREATIVE) {
+                Bukkit.getScheduler().runTask(SMP.getPlugin(), () -> {
+                    player.getInventory().addItem(item);
+                });
+            }
+            CooldownManager.setCooldown(((Player) event.getEntity()), "sorcerer_pot", 60 * 1000);
         }
     }
 }

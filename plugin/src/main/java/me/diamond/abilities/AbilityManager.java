@@ -22,7 +22,7 @@ public class AbilityManager {
     public static Ability loadAbility(Player player, AbilityType type) {
         try {
             Ability ability = type.getClazz().getConstructor(Player.class).newInstance(player);
-            abilities.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>())
+            abilities.computeIfAbsent(player.getUniqueId(), _ -> new HashMap<>())
                     .put(type, ability);
             return ability;
         } catch (Exception e) {
@@ -32,12 +32,11 @@ public class AbilityManager {
 
     public static void grantAbility(Player player, AbilityType type) {
         PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
-        List<String> abilities = persistentDataContainer.get(KEY, PersistentDataType.LIST.strings());
-        if (abilities != null) {
-            abilities.add(type.name());
-        } else {
-            persistentDataContainer.set(KEY, PersistentDataType.LIST.strings(), List.of(type.name()));
-        }
+        List<String> abilities = Objects.requireNonNullElse(persistentDataContainer.get(KEY, PersistentDataType.LIST.strings()), Collections.emptyList());
+        List<String> copy = new ArrayList<>(abilities);
+        copy.add(type.name());
+        persistentDataContainer.set(KEY, PersistentDataType.LIST.strings(), copy);
+
 
         Ability ability = loadAbility(player, type);
         player.give(ability.getSpecialItems());
@@ -46,6 +45,12 @@ public class AbilityManager {
     public static void removeAbility(Player player, AbilityType type) {
         Ability ability = abilities.get(player.getUniqueId()).remove(type);
         ability.clearUp();
+
+        PersistentDataContainer persistentDataContainer = player.getPersistentDataContainer();
+        List<String> abilities = Objects.requireNonNullElse(persistentDataContainer.get(KEY, PersistentDataType.LIST.strings()), Collections.emptyList());
+        List<String> copy = new ArrayList<>(abilities);
+        copy.remove(type.name());
+        persistentDataContainer.set(KEY, PersistentDataType.LIST.strings(), copy);
     }
 
     public static void loadAbilities(Player player) {
@@ -60,6 +65,7 @@ public class AbilityManager {
     }
 
     public static Set<AbilityType> getAbilities(Player player) {
-        return abilities.get(player.getUniqueId()).keySet();
+        var map = abilities.get(player.getUniqueId());
+        return map != null ? map.keySet() : Collections.emptySet();
     }
 }

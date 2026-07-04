@@ -1,6 +1,7 @@
 package me.diamond.listener;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import me.diamond.SMP;
 import me.diamond.abilities.AbilityManager;
 import me.diamond.abilities.AbilityType;
@@ -15,7 +16,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +23,7 @@ import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class PlayerInteractEvent implements Listener {
 
@@ -50,7 +51,8 @@ public class PlayerInteractEvent implements Listener {
                         AbilityType ability = AbilityType.valueOf(model.value().split("_")[0].toUpperCase());
                         if (AbilityManager.getAbilities(player).size() < SMP.MAX_ABILITIES) {
                             AbilityManager.grantAbility(player, ability);
-                            player.sendMessage(Component.translatable("Successfully equipped the %s ability!", ability.name().toLowerCase()).color(NamedTextColor.GREEN));
+                            player.getInventory().remove(item);
+                            player.sendMessage(Component.text(String.format("Successfully equipped the %s ability!", ability.name().toLowerCase())).color(NamedTextColor.GREEN));
                             player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                         } else {
                             player.sendMessage(Component.text("You already have the maximum amount of abilities!").color(NamedTextColor.RED));
@@ -61,7 +63,6 @@ public class PlayerInteractEvent implements Listener {
 
                     //Fire Breath
                     if (model.value().equalsIgnoreCase("inferno_ability")) {
-
                         event.setCancelled(true);
 
                         int tick = Bukkit.getCurrentTick();
@@ -86,11 +87,57 @@ public class PlayerInteractEvent implements Listener {
         }
     }
 
+    @EventHandler
     public void onInteract(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player) {
             if (checkIfBlinking(player)) {
                 event.setCancelled(true);
                 return;
+            }
+
+            if (AbilityManager.getAbility(player, AbilityType.AQUAMAN) != null && player.isUnderWater()) {
+                //50% Chance
+                if (ThreadLocalRandom.current().nextBoolean()) {
+                    // Multiply damage to simulate crit
+                    double critDamage = event.getDamage() * 1.5;
+                    event.setDamage(critDamage);
+
+                    // Spawn crit particles at target
+                    event.getEntity().getWorld().spawnParticle(
+                            Particle.CRIT,
+                            event.getEntity().getLocation().add(0, 1, 0),
+                            10, 0.5, 0.5, 0.5, 0
+                    );
+
+                    // Play crit sound
+                    event.getEntity().getWorld().playSound(
+                            event.getEntity().getLocation(),
+                            Sound.ENTITY_PLAYER_ATTACK_CRIT,
+                            1f, 1f
+                    );
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityKnockback(EntityKnockbackEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            //Check if the player has the hacker ability
+            if (AbilityManager.getAbility(player, AbilityType.HACKER) != null) {
+                //15% Chance
+                if (ThreadLocalRandom.current().nextInt(100) < 15) {
+                    //Check if the knockback was caused by a hit
+                    if (event.getCause() == EntityKnockbackEvent.Cause.ENTITY_ATTACK) {
+                        Vector rawKnockback = event.getKnockback();
+
+                        // 3. Create a modified vector keeping Y (vertical) but zeroing out X and Z (horizontal)
+                        Vector verticalOnlyKnockback = new Vector(0, rawKnockback.getY(), 0);
+
+                        // Override the event's knockback
+                        event.setKnockback(verticalOnlyKnockback);
+                    }
+                }
             }
         }
     }
@@ -114,7 +161,7 @@ public class PlayerInteractEvent implements Listener {
 
             int currentTick = Bukkit.getCurrentTick();
 
-            // Stop if player stopped pressing F
+            // Stop if player stopped pressing right click
             if (!lastPress.containsKey(player) ||
                     currentTick - lastPress.get(player) > STOP_DELAY) {
                 stop(player, task);
@@ -169,6 +216,11 @@ public class PlayerInteractEvent implements Listener {
                 if (above.getType().isAir()) {
                     above.setType(Material.FIRE);
                 }
+                break;
+            }
+
+            if (point.getBlock().getType() == Material.WATER) {
+                point.getWorld().playSound(point.getBlock().getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, SoundCategory.AMBIENT, 1, 1);
                 break;
             }
 

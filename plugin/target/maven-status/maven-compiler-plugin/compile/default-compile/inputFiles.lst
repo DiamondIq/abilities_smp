@@ -6,14 +6,14 @@ C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plu
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\abilities\Inferno.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\abilities\Sorcerer.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\AbilityCommand.java
+C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\InventoryClickEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\ItemDropEvent.java
-C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\ItemOffhandEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerConsumeEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerDeathEvent.java
-C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerHitEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerInteractEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerJoinEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerMoveEvent.java
+C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PlayerShiftEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\listener\PotionThrowEvent.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\SMP.java
 C:\Users\karol\OneDrive\Pulpit\Pulpit\Development\Java\Minecraft\Plugins\SMP\plugin\src\main\java\me\diamond\utils\ActionBarManager.java
